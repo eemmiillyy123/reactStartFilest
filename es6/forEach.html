@@ -32,20 +32,62 @@ const people = [
 // https://www.youtube.com/watch?v=_vFuDQ_6Xt8
 
 // #2. 操作所有陣列內的值（同一個陣列）
-
-
+//forEach((item陣列本身,i陣列索引,array陣列本身) array通常不會用到
+people.forEach((item,i)=>{
+  item.newPrice=item.price*0.8
+});
+console.log(people)
 // #3. 重新建立新的陣列
-
-
+//map會return一個新值 會產生陣列內容是每次return的結果
+const order=people.map((item,i)=>{
+  return {
+    price:item.price*0.8,
+    title:item.like
+  }
+});
+console.log(order)
+//可以縮寫 return和{}去掉 回傳的是物件所以物件外加()
+const order1=people.map((item,i)=>
+ ({
+    price:item.price*0.8,
+    title:item.like
+  })
+);
+console.log(order)
 // #4 map 使用注意事項
-
+//price高於60元再加到訂單裡
+//原陣列的個數會等於map後產生的新陣列的個數
 // 當直接回傳時，會出現 undefined 的內容
-
+// const order2=people.map((item,i)=>{
+//   if(price>60){
+//     return {
+//       price:item.price*0.8,
+//       title:item.like
+//    }
+//   }
+  
+// });
 
 // 解法
-
-
+//用filter把想要的物件取出來再用map重新產生一個新陣列
+const filterOrder=people.filter((item)=>item.price > 60);
+const order4=filterOrder.map((item,i)=>({
+    price:item.price*0.8,
+    title:item.like
+})
+);
+console.log(filterOrder)
+console.log(order4)
+//filter和map縮寫
+const order5=people.filter((item)=>item.price > 60)
+  .map((item,i)=>({
+    price:item.price*0.8,
+    title:item.like
+})
+);
+console.log(order5)
 // #5 map 在 React 中的運用
+//渲染到畫面上也可以使用陣列方法
 const App = ()=> {
   const people = [
     {
@@ -71,7 +113,11 @@ const App = ()=> {
   ];
   return <div>
     <ul>
-      
+      {
+        people.map((item,i)=>{
+          return <li key={i}>{item.name}喜歡吃{item.like}</li>
+        })
+      }
     </ul>
   </div>
 }

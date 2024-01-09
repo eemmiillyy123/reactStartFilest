@@ -29,9 +29,27 @@ const App = () => {
   }
 
   // #1 建立非同步方法時，會因為渲染的關係不斷重複觸發
-
+  /*
+  const getPhotos=async()=>{
+    // console.log(`${api}?client_id=${accessKey}&query=${filterString}`);
+    const result=await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
+    console.log(result);
+  }
+  getPhotos();
+  */
   // #2 useEffect
-
+  //每次刷新元件時可以決定要不要在執行一次
+  //會帶入兩個參數[callbackfunction,[]]
+  //[]是一個條件，沒有塞入條件代表這個元件在執行過程中useEffect只會觸發一次
+  //有塞入其他條件時，在每次條件更新的情況下再去觸發一次useEffect
+  useEffect(()=>{
+    const getPhotos=async()=>{
+      // console.log(`${api}?client_id=${accessKey}&query=${filterString}`);
+      const result=await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
+      console.log(result);
+    }
+    getPhotos();
+  },[]);
   return (<div>
     {console.log(2)}
     <SearchBox onSearchHandler={onSearchHandler} filterString={filterString} />

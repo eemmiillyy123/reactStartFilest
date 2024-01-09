@@ -7,23 +7,27 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 // #1 非同步的觀念
-// function getData() {
-//   setTimeout(() => {
-//     console.log('... 已取得遠端資料');
-//   }, 0);
-// }
-// // 請問取得資料的順序為何
-// function init() {
-//   console.log(1);
-//   getData();
-//   console.log(2);
-// }
-//
-// init();
+/*
+function getData() {
+  setTimeout(() => {
+    console.log('... 已取得遠端資料');
+  }, 0);
+}
+// 請問取得資料的順序為何
+function init() {
+  console.log(1);
+  getData();
+  console.log(2);
+}
 
+init();
+//setTimeout模擬取得遠端資料 0:執行的延遲時間為0秒
+//執行順序會是1->2->... 已取得遠端資料(非同步的概念 所有非同步行為會到最後才處理)
+//在執行非同步時常常會出現不如預期的狀況 若希望執行順序是1->... 已取得遠端資料->2 而去改寫很容易會造成callback hell無限巢狀結構
 // 更正確的說法，Promise 是為了解決傳統非同步語法難以建構及管理的問題，如有興趣可搜尋 "callback hell js"
-
+*/
 // #2 Promise
+//promise失敗或成功只會擇一執行
 const promiseSetTimeout = (status) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -32,10 +36,10 @@ const promiseSetTimeout = (status) => {
       } else {
         reject('promiseSetTimeout 失敗')
       }
-    }, 0);
+    }, 1000);//時間到才會回傳成功或失敗的結果
   })
 }
-
+//status:主動去決定promise是成功還是失敗 在實戰中可能無法預期成功或失敗要寫相對應的處理
 // #2-1 基礎運用
 //要避免串接的問題
 /*
@@ -47,16 +51,12 @@ promiseSetTimeout(1)
   .then((res)=>{
     console.log(res);
     console.log(2);
-  })
-//結果:
-//1
-//2
+  });
 */
-//promiseSetTimeout 成功
 
 // #2-2 串接
-/*
 //1->promise->2->promise->3
+/*
 console.log(1);
 promiseSetTimeout(1)
   .then((res)=>{
@@ -64,22 +64,16 @@ promiseSetTimeout(1)
     console.log(2);
     //promise不會用巢狀的方式撰寫會不太好維護
     //promiseSetTimeout(1)
-      .then((res)=>{
+      //.then((res)=>{
     return promiseSetTimeout(1)//會在下面的then去接收
   })
   .then((res)=>{
     console.log(res);
     console.log(3);
   })
-//結果:
-//1
-//promise
-//2
-//promise
-//3
 */
 // #2-3 失敗捕捉
-/*//失敗都會使用catch去接收(一定要寫否則會說Uncaught promiseSetTimeout失敗)
+//失敗都會使用catch去接收(一定要寫否則會說Uncaught promiseSetTimeout失敗)
 promiseSetTimeout(0)
   .then((res)=>{//成功
     console.log(res);
@@ -87,52 +81,13 @@ promiseSetTimeout(0)
   .catch((err)=>{//失敗
     console.log(err);
   })
-//promiseSetTimeout 失敗*/
 
 // #3 實戰取得遠端資料
 // #3-1
 // https://github.com/axios/axios
-//axois是一個promise based的http遠端取得工具可以用在瀏覽器或node.js上可以使用promise的then和catch語法
 
-//是一函式，展開會有很多方法可以做使用，函式本身也能使用(是一個get方法)
-//console.dir(axios)
-
-
-// https://randomuser.me/   提供假資料的API 可以取得隨機的用戶資料
-//EX:使用JQ撰寫
-/*$.ajax({
-  url: 'https://randomuser.me/api/',
-  dataType: 'json',
-  success: function(data) {
-    console.log(data);
-  }
-});*/
-//用promise based撰寫
-/*
-axios.get('https://randomuser.me/api/')
-  .then((res)=>{
-      console.log(res);
-      //是一個物件
-      //資料會在data->results裡面
-      //要再存取多個用戶資料可以使用串接的方式
-      return axios.get('https://randomuser.me/api/')
-  })
-  .then((res)=>{
-      console.log(res);
-  })
-*/
 // #3-2 記得捕捉錯誤，Axios 錯誤捕捉技巧
-axios.get('https://randomuser.me/ap/')
-  .then((res)=>{
-    console.log(res);
-  })
-  //捕捉錯誤
-  .catch((err)=>{
-    console.log(err);
-    alert(err.message);
-  })
-
-
+// https://randomuser.me/
 
 </script>
 <!-- 🙇🙇練習結束🙇🙇 -->

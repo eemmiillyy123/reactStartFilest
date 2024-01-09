@@ -21,22 +21,35 @@ const SearchBox = ({onSearchHandler, filterString}) => {
   </div>
 }
 const App = () => {
+  //元件生成
   console.log(1);
   const [filterString, setFilterString] = useState('animal');
-
+  const [text, setText] = useState('animal');
   const onSearchHandler = (e) => {
     setFilterString(e.target.value);
   }
 
   // #1 useEffect 的觸發時間點
   // 當都不加入任何條件時
-
+  //預設會跑一次，每次更新資料都會跑一次
+  /*
+  useEffect(()=>{
+    console.log(3);
+  },)
+  */
 
   // 只有加入一個空陣列
-
-
+  //只有初始化時會執行
+  /*
+  useEffect(()=>{
+    console.log(3);
+  },[])
+  */
   // 加入 state 作為條件
-
+  //當filterString更新時會觸發useEffect
+  useEffect(()=>{
+    console.log(3);
+  },[filterString,text])
 
   // #2 useEffect 的限制，不可在 if 內使用
 
@@ -44,9 +57,11 @@ const App = () => {
   // #3 非同步
   // useEffect callback 本身不能作為 async function 使用
 
-  
+  //渲染畫面
   return (<div>
     {console.log(2)}
+    <input type="text" onChange={e=>setText(e.target.value)}/>
+    {text}
     <SearchBox onSearchHandler={onSearchHandler} filterString={filterString} />
   </div>)
 }
