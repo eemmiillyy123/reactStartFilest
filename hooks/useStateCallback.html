@@ -11,14 +11,30 @@ const App = () => {
 
   // #6 關於前一個狀態
   const [arr, setArr] = useState([]);
+  function mergeArrDate(){
+    // console.log(arr);
+    const newArray=[{num:1},{num:2},{num:3}];
+    // setArr([...arr,...newArray])
+    setArr((pre)=>{
+      console.log('前一個狀態',pre);
+      return [...pre,...newArray]
+    })
+  }
 
+  useEffect(()=>{//初始化時會執行一次//2
+    // mergeArrDate();
+    //希望用setInterval又希望能取得更新後的資料
+    setInterval(()=>{//會不斷執行callback function ，加在useEffect可避免重複觸發//3
+      mergeArrDate();
+    },1000)
+  },[])
 
   return (<div>
     
     <ul>
       {arr.map((item, key) => <li key={key}>{ item.num }</li>)}
     </ul>
-    <button type="button" >新增一組陣列及合併</button>
+    <button type="button" onClick={mergeArrDate}>新增一組陣列及合併</button>//1
   </div>)
 }
 

@@ -8,22 +8,63 @@
 </div>
 <script>
 // #1 原生 JS 查看 DOM 元素
+const btn=document.getElementById('btn');
+console.dir(btn);
 </script>
 <!--  -->
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
+
+// let myModal;
 const App = () => {
   // #2 使用 useRef
-
+  //()裡是初始值
+  /*
+  const btnRef=useRef(null);
+  
+  //用來確保運行正確
+  useEffect(()=>{
+    console.log(btnRef);
+  })
+  */
   // 3 操作 Bootstrap 改為使用 ref
+  const myModal=useRef(null);
+  const modalRef=useRef(null);
+  const openModal=()=>{
+    // myModal.show();
+    myModal.current.show();
+  }
+  useEffect(()=>{
+    myModal.current= new bootstrap.Modal(modalRef.current)
+    // myModal = new bootstrap.Modal(modalRef.current)
+    // myModal.show();
+  })
 
+  // 4 
+  //useRef本身是一個傳參考的特性，不會受到元件生命週期影響而改變它的值 不會更新元件狀態
+  //先前有提到當刷新元件時元件會被重新定義
+  //使用useState的set方法在更新值時會刷新元件 更新元件狀態
+  const [num,setNum]=useState(1);
+  const num2=useRef(1);
+  console.log(1);//每次觸發元件畫面都會顯示1
+  console.log('num',num,'num2',num2);
+  useEffect(()=>{
+    setInterval(()=>{
+      setNum((pre)=>pre+1)
+      num2.current=num2.current+1
+      //照理來說因為元件刷新的關係數字會無法正確新增，但因為使用useRef，傳參考的特性，不會受到元件生命週期影響而改變它的值，所以數字會不斷加1
+      // setNum(num+1);
+    },500);
+  },[])
+  //myModal定義在外層的目的在避免元件在刷新過程中myModal不斷被刷新就沒辦法套用或定義在callbackfunctin會有作用域的問題
 
   return (
     <>
-      <button type="button" className="btn btn-primary">打開 Modal</button>
-      <div className="modal fade" tabIndex="-1">
+    {/*ref={btnRef}*/}
+      <button type="button" className="btn btn-primary" onClick={openModal}>打開 Modal</button>
+      <div className="modal fade" tabIndex="-1" ref={modalRef}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

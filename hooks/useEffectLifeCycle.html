@@ -47,15 +47,46 @@ const App = () => {
   */
   // 加入 state 作為條件
   //當filterString更新時會觸發useEffect
+  /*
   useEffect(()=>{
     console.log(3);
   },[filterString,text])
+  */
 
   // #2 useEffect 的限制，不可在 if 內使用
-
+  if(filterString=='animal'){
+    useEffect(()=>{
+      console.log(3);
+    },[filterString,text])
+  }
 
   // #3 非同步
   // useEffect callback 本身不能作為 async function 使用
+  /*
+  useEffect(async()=>{
+  },[]);*/
+  /*
+   useEffect(()=>{
+    const getPhotos=async()=>{
+      // console.log(`${api}?client_id=${accessKey}&query=${filterString}`);
+      const result=await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
+      console.log(result);
+    }
+    getPhotos();
+  },[]);
+  */
+  // useEffect觸發後確定要執行非同步函式的話，可以改成立即函式  
+  (async()=>{
+    //加上trycatch
+    try {
+      // console.log(`${api}?client_id=${accessKey}&query=${filterString}`);
+      const result=await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
+      console.log(result);  
+    } catch (error) {
+      console.log('錯誤:',error);
+    }
+      
+  })();
 
   //渲染畫面
   return (<div>
