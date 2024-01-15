@@ -46,11 +46,21 @@ console.log(obj.fn());
 // console.log(obj3.fn());
 
 // #2-2 物件內的變數
-// const person = {
-//   name: '小明'
-// };
-
-
+const name='小明'
+function fn(){
+  return this.name;
+}
+const person = {
+  name,
+  fn
+};
+//變數傳入時若和屬性同名可簡寫
+const person2 = {
+  name:name,
+  fn:fn
+};
+console.log('person:',person);
+console.log('person2:',person2);
 
 
 
@@ -66,11 +76,15 @@ const methods = {
     console.log(1);
   },
   fn2() {
-    console.log(1);
+    console.log(2);
   },
 }
-
-
+const newMethods=methods;
+newMethods.fn3=function(){
+	console.log(3);
+}
+console.log('methods',methods);
+console.log('newMethods',newMethods);
 // #3-3 轉成純陣列
 // 補充說明：NodeList 或 HTMLCollection 或 Arguments 是「類陣列」的物件，可以運用本章節的展開技巧轉換為純陣列。
 // Argument: https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Functions/arguments

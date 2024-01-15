@@ -49,10 +49,14 @@ const App = () => {
   // #3 加入滾動事件，滾動到列表下方時，取得一筆新的
   //    必須取得1.列表至上方距離、列表高度、視窗高度
   // #4 修正過度觸發的問題->加入讀取事件
-  // #Q 搜尋欄輸入'building'，取得的新資料，居然在第二頁，新取得的AJAX，還是舊的Animal
+  // #Q 搜尋欄輸入'building'，取得的新資料，居然在第二頁
+  // #B setJsonData沒有做判斷，只要更新資料就會往後塞
+  // #Q 新取得的AJAX，還是舊的Animal
+  // #B 滾動事件在搜尋字更新為buliding時，裡面的getPhoto是由滾動監聽所保留的(保留舊的是件)
+  // #B 每次重新進行搜尋時，useEffect都會重新觸發一次，讓滾動監聽不斷觸發新的滾動監聽
   // #5 輸入文字，資料狀態呈現要正確
   // #6 確保監聽事件是正常的
-  const getPhotos=async(page=1)=>{
+  const getPhotos=async(page=1,isNew=true)=>{
     try {
         // 搜尋特定需要加入 query
         // setIsLoading(true);
@@ -63,8 +67,12 @@ const App = () => {
         // setJsonData([...jsonData,...result.data.results])//但外部事件沒辦法取得當前最正確的jsonData
         setJsonData((preData)=>{
           console.log('更新資料觸發');
+          if(isNew){
+            return [...result.data.results]//輸入其他字眼時不需要保留舊的資料
+          }
           return [...preData,...result.data.results]
-        })
+        });
+        currentPage.current=page;//每次都需要去確認當前頁
         setTimeout(()=>{
           // setIsLoading(false);
           isLoading.current=false;
@@ -77,19 +85,21 @@ const App = () => {
   const listRef=useRef(null);//算list高度
   useEffect(() => {
     (async () => {
-      getPhotos();
+      getPhotos(1,true);
       //滾動監聽
-      window.addEventListener('scroll',()=>{
+      const scrollEvent=()=>{
         console.log('scroll',window.scrollY);//取得垂直滾動的位子
         // console.dir(listRef.current);
         const height=(listRef.current.offsetHeight+listRef.current.offsetTop)-window.innerHeight;//扣掉瀏覽器本身的高度
         // console.log(height);
         // if(!isLoading&&window.scrollY>height){//需要滾動到下方，並且沒有在讀取中
           if(!isLoading.current&&window.scrollY>height){//需要滾動到下方，並且沒有在讀取中
-          currentPage.current++;
-          getPhotos(currentPage.current);//取得頁數加一的資料
-        }
-      })
+             currentPage.current++;
+             getPhotos(currentPage.current,false);//取得頁數加一的資料
+          }
+      }
+      window.addEventListener('scroll',scrollEvent);
+      return ()=>window.removeEventListener('scroll',scrollEvent);
       // try {
       //   // 搜尋特定需要加入 query
       //   const result = await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
