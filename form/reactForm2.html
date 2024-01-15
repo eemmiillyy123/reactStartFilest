@@ -8,25 +8,39 @@
 const { useState } = React
 const App = () => {
   // #1-1 單一 checkbox
-
+  const [check,setCheck]=useState(false);
   // #1-2 複數 checkbox
-
+  const [checkList, setCheckList]=useState([]);
+  const handleCheckList=(e)=>{
+    console.dir(e.target.value);//因為value已經寫好所以可以取到值
+    if(e.target.checked){
+      setCheckList([...checkList,e.target.value]);
+    }else{
+      setCheckList(checkList.filter((item)=>item!=e.target.value));
+    }
+  }
 
   return (<div>
   {/* #1-1 checkbox */}
-  <label htmlFor="isCheck">確認狀態 </label>
-  <input id="isCheck" type="checkbox"/>
+  <label htmlFor="isCheck">確認狀態 {check.toString()}</label>
+  <input id="isCheck" type="checkbox" 
+  onChange={e=>{
+    // console.dir(e.target);
+    setCheck(e.target.checked);
+  }}
+  value={check}
+  />
 
   {/* #1-2 checkList */}
   <br/>
-  
+  {checkList}
   <br/>
   <label htmlFor="checkList1">炒麵</label>
-  <input id="checkList1" type="checkbox" name="like" value='炒麵' />
-  <label htmlFor="checkList2">鍋燒意麵</label>
-  <input id="checkList2" type="checkbox" name="like" value='鍋燒意麵' />
+  <input id="checkList1" type="checkbox" name="like" onChange={handleCheckList} value='炒麵'/>
+ <label htmlFor="checkList2">鍋燒意麵</label>
+  <input id="checkList2" type="checkbox" name="like" onChange={handleCheckList}  value='鍋燒意麵' />
   <label htmlFor="checkList3">炸薯條</label>
-  <input id="checkList3" type="checkbox" name="like" value='炸薯條' />
+  <input id="checkList3" type="checkbox" name="like" onChange={handleCheckList}  value='炸薯條' />
 
 
   </div>)
