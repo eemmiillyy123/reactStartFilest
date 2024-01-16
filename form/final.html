@@ -8,9 +8,68 @@
 <script src="https://cdn.jsdelivr.net/npm/react-hook-form@7.33.1/dist/index.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 <script type="text/babel">
-  const { useState, useEffect } = React;
+  const { useState, useEffect,type } = React;
   const { useForm, useWatch } = ReactHookForm;
+  const Input=({register,errors,id,labelText,type,rules})=>{
+    return (<>
+      <label htmlFor={id} className='form-label'>
+        {labelText}
+      </label>
+      <input
+        id={id}
+        type={type}
+        name={id}
+        {...register(id,rules)}
+        // className="form-control"
+        className={`form-control ${errors[id] && 'is-invalid'}`}
+      />
+      {
+        errors[id]&&(
+          <div className  ="invalid-feedback">{errors?.[id]?.message}</div>
+        )
+      }
 
+    </>)
+  }
+  const Select=({ id, labelText, register, errors, rules, children, disabled = false })=>{
+    return (<>
+    <label htmlFor={id} className='form-label'>
+      {labelText}
+    </label>
+    <select id={id} 
+        className={`form-select ${errors[id] && 'is-invalid'}`}
+        {...register(id, rules)}
+        disabled={disabled}
+    >
+        { children }
+      </select>
+    {
+        errors[id]&&(
+          <div className  ="invalid-feedback">{errors?.[id]?.message}</div>
+        )
+      }
+    </>)
+  }
+  const CheckboxRadio=({id, labelText, register, type, errors, rules, value, name})=>{
+    return (<>
+    <div className='form-check'>
+      <input
+        className={`form-check-input ${errors[name] && 'is-invalid'}`}
+        type={type}
+        name={id}
+        id={id}
+        value={value}
+        {...register(name, rules)}
+      />
+      <label className='form-check-label' htmlFor={id}>
+        {labelText}
+      </label>
+      {errors[name] && (
+          <div className='invalid-feedback'>{errors[name]?.message}</div>
+        )}
+    </div>
+    </>)
+  }
   const App = () => {
     const {
       register,
@@ -22,100 +81,147 @@
     } = useForm({
       mode: 'onTouched',
     });
+    const [customData, setCustomData] = useState({});
+    const [addressData, setAddressData] = useState([]);
+
+    // 取得地址資料
+    useEffect(() => {
+          (async () => {
+            const result = await axios.get('./assets/taiwan.json')
+            console.log(result);
+            setAddressData(result.data);
+          })();
+        }, [])
 
     return (
       <div>
         <form>
           <div className='mb-3'>
-            <label htmlFor='username' className='form-label'>
-              使用者名稱
-            </label>
-            <input
-              id='username'
-              type='text'
-              className='form-control'
-              name='username'
+            <Input register={register}  errors={errors} id="username" labelText="使用者名稱" type="text" 
+              rules={
+                {required:{
+                  value:true,
+                  message:'使用者名稱為必填'
+                },maxLength: {
+                  value: 10,
+                  message: '使用者名稱長度不超過 10',
+                },
+            }}
             />
           </div>
           <div className='mb-3'>
-            <label htmlFor='password' className='form-label'>
-              密碼
-            </label>
-            <input id='password' type='password' className='form-control' />
+            <Input register={register}  errors={errors} id="Email" labelText="Email" type="password" 
+              rules={
+                {required:{
+                  value:true,
+                  message:'Email為必填'
+                },pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: 'Email 格式不正確',
+                },
+            }}
+            />
           </div>
           <div className='mb-3'>
-            <label htmlFor='tel'>電話</label>
-            <input id='tel' type='tel' className='form-control' />
+            <Input register={register}  errors={errors} id="tel" labelText="電話" type="tel" 
+              rules={{
+                required: '電話為必填',
+                minLength: {
+                  value: 6,
+                  message: '電話不少於 6 碼'
+                },
+                maxLength: {
+                  value: 12,
+                  message: '電話不超過 12 碼'
+                }
+              }}
+            />
           </div>
+
+
+        
           <div className='row mb-3 g-3'>
             <div className='col-6'>
-              <label htmlFor='city' className='form-label'>
-                縣市
-              </label>
-              <select id='city' className='form-select'>
-                <option>Choose...</option>
-                <option>...</option>
-              </select>
+              <Select register={register} errors={errors} id="city" labelText="縣市" 
+              rules={{
+                  required: '縣市為必填'
+              }}
+              >
+              <option value="">請選擇縣市</option>
+                {addressData.map((city) => {
+                  return <option value={city.CityName} key={city.CityEngName}>{city.CityName}</option>
+                })}
+              </Select>
             </div>
             <div className='col-6'>
-              <label htmlFor='district' className='form-label'>
-                鄉鎮市區
-              </label>
-              <select id='district' className='form-select'>
-                <option>Choose...</option>
-                <option>...</option>
-              </select>
+              <Select register={register} errors={errors} id="district" labelText="鄉鎮市區" 
+              disabled={!getValues().city}
+              rules={{
+                  required: '鄉鎮市區為必填'
+              }}
+              >
+              <option value="">請選擇鄉鎮市區</option>
+                {
+                  addressData.find((city) => city.CityName === getValues().city)
+                    ?.AreaList?.map((area) => {
+                      return <option value={area} key={area.AreaName}>{area.AreaName}</option>
+                    })
+                }
+              </Select>
             </div>
           </div>
           <div className='mb-3'>
-            <div className='mb-3'>
-              <label htmlFor='address'>地址</label>
-              <input id='address' type='text' className='form-control' />
-            </div>
+            <Input register={register}  errors={errors} id="address" labelText="地址" type="text" 
+              rules={{
+                required: '地址為必填',
+              }}
+            />
           </div>
+
+
+          
           <div className='mb-3'>
             <div className='form-label'>素食者</div>
-            <div className='form-check'>
-              <input
+            <CheckboxRadio 
                 className='form-check-input'
                 type='radio'
                 name='isVegetarian'
                 id='vegetarian'
-                value='true'
+                value={true}
+                register={register}
+                errors={errors}
+                rules={{ required: '請選擇是否吃素' }}
+                labelText="是"
               />
-              <label className='form-check-label' htmlFor='vegetarian'>
-                是
-              </label>
-            </div>
-            <div className='form-check'>
-              <input
+              <CheckboxRadio 
                 className='form-check-input'
                 type='radio'
                 name='isVegetarian'
-                id='non-vegetarian'
-                value='false'
+                id='vegetarian'
+                value={false}
+                register={register}
+                errors={errors}
+                rules={{ required: '請選擇是否吃素' }}
+                labelText="否"
               />
-              <label className='form-check-label' htmlFor='non-vegetarian'>
-                否
-              </label>
-            </div>
           </div>
+          {/*
           <div className='mb-3'>
             <label htmlFor='comment'>註解</label>
             <textarea id='comment' rows='5' className='form-control' defaultValue="餐點很不錯喔" />
-          </div>
+          </div>*/}
+
           <div className='mb-3'>
-            <div className='form-check'>
-              <input
-                className='form-check-input'
+            <CheckboxRadio 
                 type='checkbox'
-                id='checkbox'
-                required
+                name='isVegetarian'
+                id='isCheckForm'
+                value={true}
+                register={register}
+                errors={errors}
+                rules={{ required:true }}
+                labelText="確認同意本文件"
               />
-              <label className='form-check-label' htmlFor='checkbox'>
-                確認同意本文件
-              </label>
-            </div>
           </div>
           <button type='submit' className='btn btn-primary'>
             註冊

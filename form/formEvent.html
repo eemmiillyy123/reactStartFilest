@@ -7,18 +7,31 @@
 <script type="text/babel">
   const { useState } = React
   const App = () => {
+    //使用search這個資料狀態來定義 setSearch寫入方法
     const [search, setSearch] = useState('');
 
     // 使用 form submit 送出
+    //用來觸發表單的submit行為
+    const formHandleSubmit=(e)=>{
+      e.preventDefault();  //消除html的預設行為
+      console.log('開始搜尋:',search);
 
+    }
 
     // Enter custom submit
-
+    const enterHandleSubmit=(e)=>{
+      // console.dir(e);
+      if(e.key==='Enter'){
+        console.log('開始搜尋:',search);
+      }
+    }
 
     
   
     return (<div>
-      <form>
+      {/*在form裡如果只有一個input就可以透過按enter觸發外層的submit行為
+      type=search後面會有個叉叉*/}
+      <form onSubmit={formHandleSubmit}>
         <div className="mb-3">
           <label htmlFor="search2" className="form-label">搜尋</label>
           <input id="search2" type="search" className="form-control" name="search"
@@ -26,12 +39,15 @@
           value={search} />
         </div>
       </form>
-
+      {/*不使用form但按下enter還是可以觸發搜尋的行為*/}
       <label htmlFor="search1" className="form-label">搜尋</label>
-      {/* https://reactjs.org/docs/events.html#keyboard-events */}
+      {/* https://reactjs.org/docs/events.html#keyboard-events 
+      input本身有一些鍵盤事件 onKeyUp:手離開鍵盤後才會觸發 onkeyDown:按下任何按鍵時觸發 onkeyPress:按下的按鍵可以產生出一個字元的時候觸發*/}
       <input id="search1" type="search" className="form-control" name="search"
       value={search}
-      onChange={(e) => setSearch(e.target.value)} />
+      onChange={(e) => setSearch(e.target.value)} 
+      onKeyPress={enterHandleSubmit}/>
+      {/*onChange綁定資料狀態 onKeyPress來觸發submit行為*/}
     </div>)
   }
   
