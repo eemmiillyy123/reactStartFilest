@@ -50,6 +50,28 @@
     const [products, setProducts] = useState(sampleData);
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
+/*
+    const filterProducts=useMemo(()=>{
+      //1.過濾
+      //展開，避免影響到原始數據
+      //下方即可做到搜尋功能
+      const filter=[...products].filter((product)=>product.title.match(search));//回傳一個條件，當為true時將product回傳到filter false就不會回傳
+      //2.排序 sort
+      //sort結果會回傳 return也會回傳給filterProducts
+      //a和b作比較
+      return filter.sort((a,b)=>{
+        // return a.price-b.price;//價格會由小至大排列
+        return ascending?a.price-b.price:b.price-a.price;
+      });
+
+    },[ascending,search])//排序和搜尋時觸發
+*/
+    //優化 使用串接方式
+    const filterProducts=useMemo(()=>{
+      return [...products]
+      .filter((product)=>product.title.match(search))
+      .sort((a,b)=> ascending?a.price-b.price:b.price-a.price);
+    },[ascending,search])//排序和搜尋時觸發
 
     return (
       <>
@@ -67,6 +89,16 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <table className="table">
+          <tbody>
+            {filterProducts.map((product)=>{
+              return <tr key={product.id}>
+                <td>{product.title}</td>
+                <td>{product.price}</td>
+              </tr>
+            })}
+          </tbody>  
+        </table>
       </>
     );
   };

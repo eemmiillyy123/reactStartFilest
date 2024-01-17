@@ -5,25 +5,36 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect,useMemo } = React;
 
 let num = 0;
 const App = () => {
   const [price, setPrice] = useState(100);
   const [qty, setQty] = useState(1);
-
+  const [text,setText]=useState('');
+  
+  //total不能設條件 狀態更新就會被觸發  
   const total = price * qty;
   num++;
   console.log(`程式碼已經被計算 ${num} 次`);
+  console.log('total:',total);
 
+  //useMemo寫法和useEffect很像 只是useMemo會回傳一個值 useMemo可以設定條件
+  const memoTotal=useMemo(()=>{
+    console.log('Memo被觸發了');
+    //把總價重新作計算 值會賦予到memoTotal
+    return price * qty;
+  },[price,qty])//當價格或數量有觸發時才去觸發callback function
 
   return (<>
     {price} {qty}
     <input type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
     <input type="number" value={qty} onChange={(e) => setQty(parseInt(e.target.value))} />
     <div>
-      總價：{total}
+      總價：{total},總價(useMemo):{memoTotal}
     </div>
+    {/*text更新時整個元件會刷新一次 total會被重新計算*/}
+    <input type="text" value={text} onChange={(e) => setText(e.target.value)}/>
   </>)
 }
 
