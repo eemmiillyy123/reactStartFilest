@@ -33,21 +33,21 @@
   }
   const Select=({ id, labelText, register, errors, rules, children, disabled = false })=>{
     return (<>
-    <label htmlFor={id} className='form-label'>
-      {labelText}
-    </label>
-    <select id={id} 
-        className={`form-select ${errors[id] && 'is-invalid'}`}
-        {...register(id, rules)}
-        disabled={disabled}
-    >
-        { children }
-      </select>
-    {
-        errors[id]&&(
-          <div className  ="invalid-feedback">{errors?.[id]?.message}</div>
-        )
-      }
+      <label htmlFor={id} className='form-label'>
+        {labelText}
+      </label>
+      <select id={id} 
+          className={`form-select ${errors[id] && 'is-invalid'}`}
+          {...register(id, rules)}
+          disabled={disabled}
+      >
+          { children }
+        </select>
+      {
+          errors[id]&&(
+            <div className  ="invalid-feedback">{errors?.[id]?.message}</div>
+          )
+        }
     </>)
   }
   const CheckboxRadio=({id, labelText, register, type, errors, rules, value, name})=>{
@@ -56,7 +56,7 @@
       <input
         className={`form-check-input ${errors[name] && 'is-invalid'}`}
         type={type}
-        name={id}
+        name={name}
         id={id}
         value={value}
         {...register(name, rules)}
@@ -84,6 +84,16 @@
     const [customData, setCustomData] = useState({});
     const [addressData, setAddressData] = useState([]);
 
+
+    const watchForm = useWatch({
+      control,
+    });
+    useEffect(() => {
+      console.log(getValues()); // 可以使用 getValues 取得所有、特定值
+      console.log('errors', errors);
+      // 或是使用 setValues 寫入值
+    }, [watchForm]); // 將新變數傳入
+    
     // 取得地址資料
     useEffect(() => {
           (async () => {
@@ -95,7 +105,7 @@
 
     return (
       <div>
-        <form>
+        <form action='' onSubmit={handleSubmit(onSubmit)}>
           <div className='mb-3'>
             <Input register={register}  errors={errors} id="username" labelText="使用者名稱" type="text" 
               rules={
@@ -197,7 +207,7 @@
                 className='form-check-input'
                 type='radio'
                 name='isVegetarian'
-                id='vegetarian'
+                id='non-vegetarian'
                 value={false}
                 register={register}
                 errors={errors}

@@ -6,15 +6,27 @@
 <div id="root"></div>
 <script type="text/babel">
   const { useState, useEffect } = React;
-  
+  //num:做為元件刷新的數量統計使用
+  //定義在外層，所以不會受到元件更新而導致重制的問題
+  let num=0;
   const App = () => {
     const [price, setPrice] = useState(100);
+    //gty:數量
+    //定義了兩個資料狀態，由useState去定義它，兩個input對應到兩個資料狀態 {price}{gty}呈現在畫面上
+    //因此更新input時會和前方的狀態產生連動
+    //useState原理:去更新資料狀態時，整個元件會刷新，所以價格改變後，{price}的值也會跟著改變
     const [qty, setQty] = useState(1);
-  
+
+    num++;
+    console.log(`元件已經更新 ${num} 次`)
+
+    //每次更新state時元件會刷新所以可以取得最新的price、qty
+    const total=price*qty;  
     return (<>
       {price} {qty}
       <input type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
       <input type="number" value={qty} onChange={(e) => setQty(parseInt(e.target.value))} />
+      <p>總價:{total}</p>
     </>)
   }
   
