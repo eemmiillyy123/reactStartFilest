@@ -6,17 +6,23 @@
 </div>
 <!-- 🔥🔥練習開始🔥🔥 -->
 <ul>
-    <li>1</li>
-    <li>2</li>
+    <!-- <li id="number">1</li> -->
+    <li class="studentName">1</li>
+    <li style="font-size: 20px">2</li>
     <li>3</li>
 </ul>
+<span style="font-size: 20px">hi!</span>
 <script type="text/babel">
-    /*
-   const doms = document.querySelectorAll('li');
+    
+//    const doms = document.querySelectorAll('li,span');
+const doms = document.querySelectorAll('[style*="font-size"]');
    console.log(doms);
-   const dom = document.querySelector('li');
+//    const dom = document.querySelector('.id');
+   const dom = document.querySelector('li,span');
    console.log(dom);
-   */
+   
+
+   
    /*
    for (var i=0; i<5; i++){
       setTimeout(function(){

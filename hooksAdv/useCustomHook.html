@@ -6,11 +6,30 @@
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const useMousePosition=()=>{
+  const [mouse,setMouse]=useState({});
+  //事件監聽
+  useEffect(()=>{
+    const getMouseEvent=(e)=>{
+      console.log(e);
+      setMouse({
+        x:e.clientX,
+        y:e.clientY
+      })
+    }
+    window.addEventListener('mousemove',getMouseEvent);
+    //事件監聽如果是用useEffect會建議移除掉
+    return ()=>window.removeEventListener('mousemove',getMouseEvent);
+  },[])
+  //加上return
+  return mouse;
+}
 
 const App = () => {
   const [text, setText] = useState('')
-
+  const mouse=useMousePosition();
   return (<>
+    {mouse.x} {mouse.y}
     <input type="text" onChange={e => {
       setText(e.target.value)
     }} />

@@ -5,7 +5,7 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo } = React;
+  const { useState, useEffect, useMemo, memo,useCallback } = React;
   const sampleData = [
     {
       id: 1,
@@ -45,7 +45,7 @@
   ];
 
   // 使用 memo
-  const DataTable = memo(({filterProducts}) => {
+  const DataTable = memo(({filterProducts,handleCheck}) => {
     console.log(`元件更新觸發`);
     return (<table className='table'>
       <tbody>
@@ -54,6 +54,8 @@
             <tr key={product.id}>
               <td>{product.title}</td>
               <td>{product.price}</td>
+              {/*title值在target->value*/}
+              <td><input type="checkbox" onChange={handleCheck} value={product.title}/></td>
             </tr>
           );
         })}
@@ -66,7 +68,8 @@
     const [products, setProducts] = useState(sampleData);
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
-    const [text, setText] = useState('')
+    const [text, setText] = useState('');
+    const [items,setItems]=useState([]);
 
     const filterProducts = useMemo(() => {
       return [...products]
@@ -77,6 +80,22 @@
           return ascending ? a.price - b.price : b.price - a.price;
         });
     }, [ascending, search]);
+
+    //DataTable傳入一個方法 做勾選功能 勾選時外層元件能接收這個狀態
+    const handleCheck=useCallback((e)=>{
+      console.log(e);
+      //多選checkbox
+      console.log('handleCheck已經被觸發');
+      if(e.target.checked){//判斷checkbox是否有被選取
+        setItems([...items,e.target.value]);
+      }else{
+        setItems(items.filter((item)=>item!==e.target.value));
+      } 
+      },[items])//items更新時狀態必須要更新 
+      //結果:點擊checkbox時handleCheck會更新會取得一個新的狀態並傳入到DataTable
+      //DataTable使用memo，會因為props更新而重新刷新
+
+    // },[])//初始狀態，每次點擊都是一個[]加上一個新項目
 
     return (
       <>
@@ -99,7 +118,8 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <DataTable filterProducts={filterProducts}></DataTable>
+        <p>選擇項目:{items}</p>
+        <DataTable filterProducts={filterProducts} handleCheck={handleCheck}></DataTable>
       </>
     );
   };

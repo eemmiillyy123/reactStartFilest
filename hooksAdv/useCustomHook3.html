@@ -7,12 +7,31 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
+//有很多hook可以做使用
 // https://usehooks.com/
 // https://usehooks.com/useDebounce/
+//
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay || 500)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 const App = () => {
   const [text, setText] = useState('')
-
+  //輸入關鍵字等待500後若用戶都沒有觸發debounceText才會進行更新
+  const debounceText=useDebounce(text,500);
+  useEffect(()=>{
+    console.log('假設要發出非同步請求');
+  },[debounceText])//更新debounceText財會觸發非同步行為
   return (<>
     <input type="text" onChange={e => setText(e.target.value)}
     />

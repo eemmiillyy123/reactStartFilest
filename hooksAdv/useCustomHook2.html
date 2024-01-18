@@ -29,7 +29,7 @@ const App = () => {
   const mouse = useMousePosition();
   useEffect(() => {
     const img = imgRef.current;
-    // #1 圖片的定位
+    // #1 圖片的定位(中心點)
     const imgPosition = {
       x: img.x + (img.width / 2), // 補充：使用 img.x, img.y 座標才是正確的
       y: img.y + (img.height / 2)

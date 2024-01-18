@@ -6,7 +6,7 @@
 
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo } = React;
+  const { useState, useEffect, useMemo, memo } = React;
   const sampleData = [
     {
       id: 1,
@@ -44,13 +44,37 @@
       price: 120,
     },
   ];
-
+ 
+  //將table轉換成元件
+  //原來:
+  //1.filterProducts有更新表格會重新渲染(狀態更新整的元件都會刷新))
+  //2.外層元件更新的情況下內層元件也會重新進行渲染 如果程式碼比較複雜就會消耗額外的耗能來進行元件的渲染
+  //要避免內層元件過度渲染就可以使用到memo方法 作為元件渲染所使用
+  //加入memo後，元件渲染條件會被改變，被改成props更新時才重新渲染元件
+  const DataTable=memo(({filterProducts})=>{//在元件宣告前加上memo 後面程式寫成callback function來執行
+      console.log('DataTable已經被渲染');
+      return(<table className='table'>
+          <tbody>
+            {filterProducts.map((product) => {
+              return (
+                <tr key={product.id}>
+                  <td>{product.title}</td>
+                  <td>{product.price}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>)
+    })
+    
   let num = 0;
   const App = () => {
     const [products, setProducts] = useState(sampleData);
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
+    const [text,setText]=useState('');
 
+    
     const filterProducts = useMemo(() => {
       return [...products]
         .filter((product) => {
@@ -63,6 +87,10 @@
 
     return (
       <>
+        <input type="text" value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <br/>
         升降冪：
         <input
           type='checkbox'
@@ -77,18 +105,7 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <table className='table'>
-          <tbody>
-            {filterProducts.map((product) => {
-              return (
-                <tr key={product.id}>
-                  <td>{product.title}</td>
-                  <td>{product.price}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <DataTable filterProducts={filterProducts}/>
       </>
     );
   };

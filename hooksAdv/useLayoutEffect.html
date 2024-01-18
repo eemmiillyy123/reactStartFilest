@@ -6,7 +6,7 @@
 
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo, useCallback } = React;
+  const { useState, useEffect, useMemo, memo, useCallback,useLayoutEffect } = React;
   const sampleData = [
     {
       id: 1,
@@ -48,7 +48,7 @@
   // 使用 memo
   const DataTable = memo(({products, handleSelectCheck}) => {
     console.log(`元件更新觸發`);
-    return (<table className='table'>
+    return (<table className='table table-dark'>
       <thead>
         <tr>
           <td>品項</td>
@@ -81,6 +81,39 @@
 
     const [text, setText] = useState('');
     
+    //元件初始化的生命週期(由上而下執行程式碼)
+    //1.調用function 元件(建立資料狀態等)
+    //2.建立virtual DOM(標籤被建立)
+    //3.useLayoutEffect
+    //4.畫面渲染
+    //5.呼叫useEffect
+
+    //測試useEffect建立的時間
+    console.time('useEffect');//建立元件時就觸發
+    console.time('useLayoutEffect');
+    useLayoutEffect(()=>{
+      console.log('useLayoutEffect被觸發');
+      const array=[];
+      //加上for迴圈讓執行順序比較明顯
+      for(let index=0;index<100000000;index++){
+        array.push('gregr');
+      }
+      setProducts(sampleData);//寫入後會直接呈現在畫面上(表格是直接出現的)畫面渲染就會更即時一些
+      console.timeEnd('useLayoutEffect');
+    },[])
+    useEffect(()=>{
+      console.log('useEffect被觸發');
+      const array=[];
+      for(let index=0;index<100000000;index++){
+        array.push('gregr');
+      }
+      //跑完回圈後才進行資料寫入再觸發一次生命週期再渲染畫面
+      // setProducts(sampleData);
+      console.timeEnd('useEffect');
+    },[])
+
+
+
     // ======
     const handleSelectCheck = useCallback((e) => {
       console.log('handleSelectCheck 已被觸發');

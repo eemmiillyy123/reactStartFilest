@@ -40,6 +40,7 @@ const {useState}=React;
 const App = () => {
   // #3-2 這影響了許多會操作原始值的方法
   const [num,setNum]=useState(1);
+  /*
   const [arr,setArr]=useState([1,2,3]);
   function removeArrData(params){
     //pop:移除陣列最後一個值，並將值回傳
@@ -60,6 +61,23 @@ const App = () => {
     console.log([...arr,arr.length+1]);//將陣列解構
     setArr([...arr,arr.length+1]);
   }
+*/
+const [arr, setArr] = useState([1, 2, 3]);
+
+const removeArrData = () => {
+  // 使用展開運算符創建新的陣列，而不是修改原始陣列
+  const newArr = [...arr];
+  console.log("newArr:",newArr);
+  newArr.pop();
+  setArr(newArr);
+};
+
+const addArrData = () => {
+  // 使用展開運算符創建新的陣列，而不是修改原始陣列
+  const newArr = [...arr];
+  newArr.push(arr.length+1); // 假設有一個新的項目 newItem
+  setArr(newArr);
+};
 
   return (<div>
     <button type="button" onClick={()=>setNum(num+1)}>{num}</button>
