@@ -6,17 +6,23 @@
 <div id="root"></div>
 <script type="text/babel">
 // #1 取出特定值作為變數
-const person = {
-  name: '小明',
-  age: 16,
-  like: '鍋燒意麵'
-}
+// const person = {
+//   name: '小明',
+//   age: 16,
+//   like: '鍋燒意麵'
+// }
+//以前寫法:const name=person.name
+// const {name,age}=person;
+//要解構的是物件就用{}，陣列就用[]
+// console.log(name,age);
 
 // #2 陣列解構
-const array = ['小明', '杰倫', '漂亮阿姨'];
-
+// const array = ['小明', '杰倫', '漂亮阿姨'];
+// const [ Ming ,Jay,Auntie]=array;
+// console.log(Ming,Jay,Auntie);
 
 // #3 解構加展開
+//希望Ming獨立解構，Jay和Auntie一起
 const people = {
   Ming: {
     name: '小明',
@@ -34,13 +40,26 @@ const people = {
     like: '名牌包'
   }
 }
-
+// const {Ming,...other}=people;
+// console.log(Ming,other);
+// const {age,like}=Ming;
+// console.log(age,like);
 // #4 解構加上重新命名
-
+let Ming={};
+const {Ming:Mi}=people;
+console.log(Mi);
 
 // #5 函式參數解構
-
-
+const person = {
+  name: '小明',
+  age: 16,
+  like: '鍋燒意麵'
+}
+function callName({name,age}){
+  //params.name
+  console.log(name,age);
+}
+callName(person);
 
 // #6 解構在 React 的運用
 const { useState } = React;

@@ -7,21 +7,60 @@
 <div id="root"></div>
 <script type="text/babel">
   const { useState, useReducer } = React;
-
+  
   const App = () => {
-    const [num, setNum] = useState(0)
-    function increment() {
-      setNum( num + 1);
-    }
-    function decrement() {
-      setNum( num - 1);
-    }
-
+    // const [num, setNum] = useState(0);
+    const [state,dispatch]=useReducer(
+    //callback function(由dispatch來進行觸發),state
+    function(state,action){//state當前的狀態 action行為(要做的事會透過action來傳遞)
+      console.log(state,action);//action來自dispatch的參數 沒有參數的話會是undefined
+      switch (action.type) {
+        case 'INCREMENT':
+          return{
+            num:state.num+1
+          }//不使用break,讓它直接跳出這個函式
+        case 'DECREMENT':
+          return{
+            num:state.num-1
+          }
+        case 'SET_NUM':      
+          return{
+            num:action.payload
+          }
+        default:
+          break;
+      }
+      return state;//必須return 沒有return state就會被清空 就沒辦法取得num的值
+    },
+    {num:5}//物件可以儲存很多的狀態 num預設值為0
+  )
+  function increment() {
+    // setNum( num + 1);
+    // dispatch();
+    dispatch({
+      //type:用來判斷行為使用 裡面的值通常會寫成大寫 payload:傳入參數
+      type:'INCREMENT',
+    });
+  }
+  function decrement() {
+    // setNum( num - 1);
+    dispatch({
+      type:'DECREMENT',
+    });
+  }
+  function setNum(e){
+    dispatch({
+      type:'SET_NUM',
+      payload:parseInt(e.target.value)//預設值會是字串 用parseInt將字串轉為int
+    });
+  }
     return (
       <>
         <button type="button" onClick={() => decrement() }>-</button>
-        {num}
+        {/*num*/state.num}
         <button type="button" onClick={() => increment() }>+</button>
+        <input type="number"  value={state.num} onChange={e=>setNum(e)}/>
+        {/*綁定value使得可以連動*/}
       </>
     );
   };

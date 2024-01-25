@@ -6,30 +6,50 @@
 <div id="root"></div>
 <script type="text/babel">
 // #1 箭頭函式改寫
-function fn(a, b) {
-  return a * b;
-}
-console.log(fn(2, 4));
-
-
-// #2 箭頭函式的 this 變化（React Hook 寫法不太會踩到這個雷）
-// var name = '全域'
-// const person = {
-//   name: '小明',
-//   callName: function () { 
-//     console.log('1', this.name); // 1 小明
-//     setTimeout(function () {
-//       console.log('2', this.name); // 2
-//       console.log('3', this); // 3
-//     }, 10);
-//   },
+// function fn(a, b) {
+//   return a * b;
 // }
-// person.callName();
+// const fn=function(){
+// }
+// const fn=(a,b)=>{
+//   return a*b;//這裡如果只有單行可以再縮寫
+// }
+//改寫
+const fn=(a,b)=>a*b;
+console.log(fn(2, 4));
+//當傳入的參數只有一個的情況下可以把()移除，沒有參數或兩個參數以上()都不能移除
+//const fn2=(n)=>n;
+const fn2=n=>n;
+console.log(fn2(5));
+//當回傳為一個物件時，請補上小括號
+//const person={name='Jay'}
+const fn3=()=>({
+  name:'Jay'
+});
+console.log(fn3());
+
+//箭頭函式的 this的指向和傳統函式不太一樣
+// #2 箭頭函式的 this 變化（React Hook 寫法不太會踩到這個雷）
+var name = '全域'
+const person = {
+  name: '小明',
+  callName: function () { 
+    console.log('1', this.name); // 1 小明
+    // setTimeout(function () {
+    setTimeout(()=>{
+      console.log('2', this.name); // 2 全域
+      console.log('3', this); // 3 window
+    }, 10);
+  },
+}
+person.callName();
 
 
 
 // #3 箭頭函式在 React 的運用
-function Card() {
+
+//function Card() {
+  const Card=()=>{
   return <div className="card">
     <div className="card-body">這是一張卡片</div>
   </div>

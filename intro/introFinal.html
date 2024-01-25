@@ -9,51 +9,126 @@
   https://images.unsplash.com/photo-1546552696-7d5f4e89b0e8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80
  -->
 <div id="root"></div>
-<!-- <div class="row row-cols-3">
-  <div class="col">
-    <a class="card" target="_blank" href="https://www.google.com.tw/" >
-      <img src="https://images.unsplash.com/photo-1520013573795-38516d2661e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1536&q=80" class="card-img-top object-fit" alt="...">
-      <div class="card-body">
-        <span class="text-dark">清潔力超強牙刷</span>
-        <span class="float-end">$99</span>
+<script type="text/babel">
+  function App(){
+    const products=[
+      {
+        imageUrl:"https://images.unsplash.com/photo-1520013573795-38516d2661e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1536&q=80",
+        title:"強力牙刷",
+        price:99,
+        link:"https://www.google.com"
+      },
+      {
+        imageUrl:"https://images.unsplash.com/photo-1618038483079-bfe64dcb17f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+        title:"強力牙刷",
+        price:120,
+        link:"https://twitter.com"
+      },
+      {
+        imageUrl:"https://images.unsplash.com/photo-1546552696-7d5f4e89b0e8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        title:"掛勾",
+        price:99,
+        link:"https://www.facebook.com"
+      }
+    ]
+    /*
+    const products={
+      toothbrush:{
+        imageUrl:"https://images.unsplash.com/photo-1520013573795-38516d2661e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1536&q=80",
+        title:"強力牙刷",
+        price:99,
+        link:"https://www.google.com"
+      },
+      sponge:{
+        imageUrl:"https://images.unsplash.com/photo-1618038483079-bfe64dcb17f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+        title:"強力牙刷",
+        price:120,
+        link:"https://twitter.com"
+      },
+      hook:{
+        imageUrl:"https://images.unsplash.com/photo-1546552696-7d5f4e89b0e8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        title:"掛勾",
+        price:99,
+        link:"https://www.facebook.com"
+      }*/
+    // }
+    return <>
+      <div className="row row-cols-3">
+         
+        {
+          products.map((item,i)=>
+          //可以使用()這樣比較不容易出錯
+            (<div className="col" key={i}>
+              <a href={item.link} target="_blank" className="card">
+              <img className="card-img-top object-fit" src={item.imageUrl} alt=""/>
+              <div className="card-body">
+                <span className="text-black">{item.title}</span>
+                <span className="float-end">${item.price}</span>
+              </div>
+              </a>  
+            </div>)
+          )
+        }
       </div>
-    </a>
-  </div>
-  <div class="col">
-    <a class="card" target="_blank" href="https://twitter.com/" >
-      <img src="https://images.unsplash.com/photo-1618038483079-bfe64dcb17f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" class="card-img-top object-fit" alt="...">
-      <div class="card-body">
-        <span class="text-dark">洗刷刷海綿</span>
-        <span class="float-end">$65</span>
-      </div>
-    </a>
-  </div>
-  <div class="col">
-    <a class="card" target="_blank" href="https://www.facebook.com/WccCasper" >
-      <img src="https://images.unsplash.com/photo-1546552696-7d5f4e89b0e8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" class="card-img-top object-fit" alt="...">
-      <div class="card-body">
-        <span class="text-dark">萬用掛勾</span>
-        <span class="float-end">$120</span>
-      </div>
-    </a>
-  </div>
-</div> -->
-<style>
-  /* .object-fit {
-    object-fit: cover;
+    </>
+    // return <>
+    //   <div className="row row-cols-3">
+    //      <div className="col">
+    //       <a href={products.toothbrush.link} target="_blank" className="card">
+    //         <img className="card-img-top object-fit" src={products.toothbrush.imageUrl} alt=""/>
+    //         <div className="card-body">
+    //           <span className="text-black">{products.toothbrush.title}</span>
+    //           <span className="float-end">${products.toothbrush.price}</span>
+    //         </div>
+    //       </a>  
+    //     </div>
+    //     <div className="col">
+    //       <a href={products.sponge.link} target="_blank" className="card">
+    //         <img className="card-img-top object-fit" src={products.sponge.imageUrl} alt=""/>
+    //         <div className="card-body">
+    //           <span className="text-black">{products.sponge.title}</span>
+    //           <span className="float-end">${products.sponge.price}</span>
+    //         </div>
+    //       </a>  
+    //     </div>
+    //     <div className="col">
+    //       <a href={products.hook.link} target="_blank" className="card">
+    //         <img className="card-img-top object-fit" src={products.hook.imageUrl} alt=""/>
+    //         <div className="card-body">
+    //           <span className="text-black">{products.hook.title}</span>
+    //           <span className="float-end">${products.hook.price}</span>
+    //         </div>
+    //       </a>  
+    //     </div>*/
+    //   </div>
+    // </>
   }
-  .card-img-top {
-    height: 250px;
-  }
-  a.card {
-    text-decoration: none;
-    transition: transform .5s, box-shadow .5s;
-  }
-  a.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .26);
-  } */
-</style>
+  
+  ReactDOM.createRoot(document.getElementById('root'))
+          .render(<App/>);
+  </script>
+  
+  <style>
+    .card-img-top{
+      height: 250px;
+    }
+    /* 圖片變形的情況下重新決定呈現方式 */
+    .object-fit{
+      object-fit: cover;
+      /* 盡可能完整呈現多餘部分會裁切掉圖片就不會變形 */
+    }
+    a.card{
+      text-decoration: none;
+      /* transition漸遍效果 在css裡0.5的0可省略*/
+      transition:transform .5s,box-shadow .5s;
+    }
+    a.card:hover{
+      /* transform樣式變形，可以將東西旋轉或位移或縮小 */
+      transform:translateY(-5px);
+      /* box-shadow:x軸 y軸 擴散範圍 顏色(最後一個是透明度:0~1) */
+      box-shadow: 0 0 10px rgb(0, 0, 0,0.16);
+    }
+  </style>
 
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>

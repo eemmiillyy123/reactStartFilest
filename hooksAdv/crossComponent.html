@@ -15,11 +15,17 @@ const LoginForm=()=>{
   {username}
   </>)
 }
+//兩個元件之間是無關聯的 狀態時各自獨立的
+//在greeting中要載入{username}是無法運行的
+//把狀態存在App元件裡 把狀態透過props傳進LoginForm和Greeting裡
+//若username放在更深層的子元件這時候就會出問題了
+//解決方法:跨過中間層級的元件直接提取到App元件 讀取一樣跨過中間層級讓最下層能讀取
 const Greeting=()=>{
   return <div>
     xxx,歡迎登入
   </div>
 }
+
 const App = () => {
   return (<>
       <LoginForm/>
